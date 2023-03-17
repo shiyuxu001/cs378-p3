@@ -1,0 +1,59 @@
+#heart{
+    height: 80px;
+}
+
+.fave-list{
+    text-align: start;
+    color: rgb(47, 108, 189);
+    list-style:inside;
+}
+
+#boston-but{
+    background-color: lightcyan;
+    border-radius: 2mm;
+    border-color: darkcyan;
+    font-weight: bold;
+    font-size:18px;
+    margin: 5px;
+  }
+  
+  #dallas-but{
+    background-color: lightcyan;
+    border-radius: 2mm;
+    border-color: darkcyan;
+    font-weight: bold;
+    font-size:18px;
+    margin: 5px;
+  }
+  
+  .subtitle{
+    color:rgb(67, 87, 87);
+    font-weight: bold;
+    font-size: 20px;
+    margin: 5px;
+  }
+  
+  #content-bar{
+    background-color: cadetblue;
+    height: 10px;
+  }
+  
+  .content-text{
+    font-size: 18px;
+    letter-spacing: .3mm;
+    text-align: start;
+    margin: 2%;
+    margin-top: 3%;
+  }
+  
+  #error-msg{
+    margin-top: 50%;
+    text-align: center;
+    vertical-align:center;
+  
+  }
+
+  .fave-cities{
+    color:green
+  }
+  
