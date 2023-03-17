@@ -22,12 +22,10 @@ function MainDisplay({currentUser}){
 
 
   useEffect(() => {
-    console.log(city)
-
-    getCityAxios();
-    //get table datacode
+    // console.log(city)
     getFaves();
-    //
+    getCityAxios();
+    
     
   }, [city]);
 
@@ -92,25 +90,7 @@ function MainDisplay({currentUser}){
   const sendData = () => {
     // setFirstInputValue("");
     
-    const sampleDict = {
-      date: new Date(),
-      text: faveChange
-    };
-    setFaveChange(null);
-    return fetch(`${databaseURL + "/" + currentUser}/.json`, {
-      method: "POST",
-      body: JSON.stringify(sampleDict)
-    }).then((res) => {
-      if (res.status !== 200) {
-        // setDataPostResult("There was an error: " + res.statusText);
-        console.log('error in post')
-        // throw new Error(res.statusText);
-      } else {
-        // setDataPostResult("Successfully sent. Check Firebase console.");
-        console.log('posted, check firebase')
-        return;
-      }
-    });
+    
   };
 
 
@@ -140,13 +120,65 @@ function MainDisplay({currentUser}){
 
 
 
-  function addToFavorite(name) {
+  async function addToFavorites(name) {
     console.log(name)
     console.log('adding!')
     //if not in favorites, add to user favorite list
     //if in favorites, remove from user list
-    setFaveChange(name)
-    sendData()
+    if(faveCities == null){
+      var temp=[name]
+      setFaveCities(temp)
+      console.log(faveCities)
+
+    }else{
+      console.log(faveCities)
+      let temp = faveCities.push(name)
+      setFaveCities(temp)
+    }
+    
+    console.log(faveCities)
+
+    // if(faveCities.)
+    let strlen = currentUser.length;
+    let userURL = currentUser.slice(0, strlen-10);
+    if(faveCities){
+      //not null
+      await fetch(`${databaseURL + "/" + userURL}/.json`, {
+        method: "PATCH",
+        body: JSON.stringify({'faves': faveCities.toString()})
+      }).then((res) => {
+        if (res.status !== 200) {
+          console.log(res)
+          // setDataPostResult("There was an error: " + res.statusText);
+          console.log('error in post')
+          // throw new Error(res.statusText);
+        } else {
+          // setDataPostResult("Successfully sent. Check Firebase console.");
+          console.log('patched, check firebase')
+          return;
+        }
+      });
+    }else{
+      await fetch(`${databaseURL + "/" + userURL}/.json`, {
+        method: "PATCH",
+        body: JSON.stringify({'faves': name})
+      }).then((res) => {
+        if (res.status !== 200) {
+          console.log(res)
+          // setDataPostResult("There was an error: " + res.statusText);
+          console.log('error in post')
+          // throw new Error(res.statusText);
+        } else {
+          // setDataPostResult("Successfully sent. Check Firebase console.");
+          console.log('patched, check firebase')
+          return;
+        }
+      });
+    }
+    
+
+
+    
   }
 
   function removeFromFavorites(name) {
@@ -161,26 +193,32 @@ function MainDisplay({currentUser}){
   // temp fave list
   // const faveList = ['Boston','Chicago','Dallas','Houston']
   const faveBtn = (cityName) =>
-    <li className='faveBtn' onClick={() => setCity(cityName)}>
+    <button className='faveBtn' onClick={() => setCity(cityName)}>
       {cityName} 
-    </li>
+    </button>
+
 
 
   const renderFaveList = () => {
-    console.log(faveCities);
-    // if (faveCities){
-      {console.log('HERE!!!!!!!');}
+
+
+    // console.log(faveCities);
+    if (faveCities){
+      // {console.log('HERE!!!!!!!');}
     
       <div className='fave-cities'>
-        HELLO HI
-        {/* { faveCities.map(faveBtn)} */}
+        {faveCities.map((e) => <button>e</button>)}
       </div>
     
     
 
-    // }else {
-    //   <div>No favorites yet</div>
-    // }
+    }else {
+      <div>No favorites yet</div>
+    }
+  }
+
+  const logOut = () => {
+    window.location.reload(false);
   }
 
 
@@ -223,12 +261,11 @@ function MainDisplay({currentUser}){
               <div className='row' style={{margin:'10px'}}>
                 <div className='col-9'></div>
                 <div className='col-1'> 
-                  if (faveCities.have(myData.results[0].city){
+                  {(faveCities && faveCities.includes(myData.results[0].city))?
                     <img id='heart' src={selected_heart} onClick={() => removeFromFavorites(myData.results[0].city)}></img>
-                  }else{
-                    <img id='heart' src={empty_heart} onClick={() => addToFavorite(myData.results[0].city)}></img>
-                  })
-                  <img id='heart' src={empty_heart} onClick={() => addToFavorite(myData.results[0].city)} />
+                    :
+                    <img id='heart' src={empty_heart} onClick={() => addToFavorites(myData.results[0].city)}></img>
+                  }
                 </div>
               </div>
             </div>
@@ -243,9 +280,15 @@ function MainDisplay({currentUser}){
         <div id='favoritesMenu'>
         {/* populate menu from user favorites */}
         <div className='subtitle'  style={{textAlign:'start'}}> Favorite cities:</div>
-        <div>{renderFaveList}</div>
+        <div>{renderFaveList()}</div>
         </div>
       </div>
+      <div className='row'>
+        <div className='col-9'></div>
+        <button className='col' id='logout-but' style={{alignSelf: 'end'}} onClick={logOut}>log out</button>
+
+      </div>
+      
     </div>
   )
 }

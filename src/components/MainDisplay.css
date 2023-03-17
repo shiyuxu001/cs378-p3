@@ -57,3 +57,11 @@
     color:green
   }
   
+  #logout-but{
+    background-color: lightcyan;
+    border-radius: 2mm;
+    border-color: darkcyan;
+    font-weight: bold;
+    font-size:18px;
+    margin: 5px;
+  }
